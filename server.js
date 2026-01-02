@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 const PORT = 3000;
 
 // 模拟数据库中的数据
@@ -31,6 +32,22 @@ app.get('/api/users/:id', (req, res) => {
     } else {
         res.status(404).json({ message: '用户未找到' });
     }
+});
+
+// 4. 新增用户接口 (POST)
+app.post('/api/users', (req, res) => {
+    // 1. 从“包裹” (req.body) 里拿到前端传来的数据
+    const newUser = {
+        id: users.length + 1, // 简单生成一个 ID
+        name: req.body.name,
+        role: req.body.role
+    };
+
+    // 2. 把新用户塞进数组
+    users.push(newUser);
+
+    // 3. 返回状态码 201 (已创建) 和新用户的数据
+    res.status(201).json(newUser);
 });
 
 app.listen(PORT, () => {
